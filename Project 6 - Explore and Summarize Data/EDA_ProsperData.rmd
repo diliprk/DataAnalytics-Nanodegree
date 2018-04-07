@@ -1,11 +1,9 @@
 ---
 output: html_document
-editor_options: 
 chunk_output_type: console
 ---
 EDA on Prosper Loan Data by Dilip Rajkumar
 ========================================================
-
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using in your analysis in this code
@@ -45,10 +43,10 @@ pld <- read.csv('prosperLoanData.csv')
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-> **Abstract**: [Prosper](https://www.prosper.com/) is America's first peer-to-peer
-lending marketplace, with more than 2 million members and over $2,000,000,000 in
-funded loans. Here we use the data available to the public (last updated on 
-March 11th, 2014) from [Udacity](https://docs.google.com/document/d/1qEcwltBMlRYZT-l699-71TzInWfk4W9q5rTCSvDVMpc/pub?embedded=true), which contains all the listings and loans ever created 
+> **Abstract**: [Prosper](https://www.prosper.com/) is America's first peer-to-
+peer lending marketplace, with more than 2 million members and over 
+$2,000,000,000 in funded loans. Here we use the data available to the public 
+(last updated on March 11th, 2014) from [Udacity](https://docs.google.com/document/d/1qEcwltBMlRYZT-l699-71TzInWfk4W9q5rTCSvDVMpc/pub?embedded=true), which contains all the listings and loans ever created 
 with 81 variables on each loan/listing, to do some data analysis. 
 
 #### Structure of the Dataset
@@ -68,23 +66,24 @@ payment information.
 
 #### Exploring and Cleaning Variables
 
-The variable _'ListingCategory'_ shows the reason a loan was taken, such as for 
+The variable _ListingCategory_ shows the reason a loan was taken, such as for 
 debt consolidation or maybe a student loan. Unfortunately, the data is stored 
 numerically, with the key being listed [here](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0).
   It makes much more sense to see the listing as what they are, rather than the 
 arbitrary number it's been given. For that, I'll have to change the 
-_'ListingCategory'_ variable from numeric to a factor:
+_ListingCategory_ variable from numeric to a factor:
 
 <br>
 
 ```{r, echo = TRUE,message=FALSE, warning=FALSE}
 # Convert ListingCategory from numeric to factor variable using the keys given
 # in the Google Spreadsheet.
-labels <- c("Debt Consolidation", "Home Improvement", "Business", "Personal Loan",
-            "Student Use", "Auto", "Baby & Adoption", "Boat", "Cosmetic Procedure",
-            "Engagement Ring", "Green Loans", "Household Expenses", "Large Purchases",
-            "Medical/Dental", "Motorcycle", "RV", "Taxes", "Vacation", "Wedding",
-            "Other", "Not Applicable")
+labels <- c("Debt Consolidation", "Home Improvement", "Business", 
+            "Personal Loan","Student Use", "Auto", "Baby & Adoption", "Boat", 
+            "Cosmetic Procedure","Engagement Ring", "Green Loans", 
+            "Household Expenses", "Large Purchases","Medical/Dental", 
+            "Motorcycle", "RV", "Taxes", "Vacation", "Wedding","Other",
+            "Not Applicable")
 
 pld$ListingCategory <- factor(pld$ListingCategory..numeric.,
                               levels = c(1:6, 8:20, 7, 0),labels = labels)
@@ -107,13 +106,11 @@ are with their payments and other delinquent customers, it will be much more
 useful visually if they're grouped as one. Let's write the code to do that:
 
 ```{r, echo = TRUE,message=FALSE, warning=FALSE}
-pld <- pld %>%
-  mutate(LoanStatusGroup = ifelse(LoanStatus %in% 
-                                  c("Cancelled", "Chargedoff", "Defaulted",
-                                    "Past Due (1-15 days)","Past Due (16-30 days)",
-                                    "Past Due (31-60 days)","Past Due (61-90 days)",
-                                    "Past Due (91-120 days)","Past Due (>120 days)"
-                                    ), 0,
+pld <- pld %>% mutate(LoanStatusGroup = ifelse(LoanStatus %in% 
+                          c("Cancelled", "Chargedoff", "Defaulted",
+                           "Past Due (1-15 days)","Past Due (16-30 days)",
+                           "Past Due (31-60 days)","Past Due (61-90 days)",
+                           "Past Due (91-120 days)","Past Due (>120 days)"), 0,
                            ifelse(LoanStatus %in%
                                   c("Current", "FinalPaymentInProgress"),1,2)))
 
@@ -167,11 +164,11 @@ summary(pld$LoanOriginalAmount)
 ```
 
 After adjusting the bin width and x-axis breaks, we get a nice histogram showing 
-the loans borrowed ranging from $1000 to the maximum amount of $35,000. The bulk of 
-the count lies below $15,000, which indicates that most of the borrowers using 
-Prosper are looking for small(er) loans. The other thing I noticed was that there
+the loans borrowed ranging from $1000 to the maximum amount of $35,000. The bulk 
+of the count lies below $15,000,which indicates that most of the borrowers using 
+Prosper are looking for small(er) loans.The other thing I noticed was that there
 are huge spikes in the count on nice, round values, like $10,000, $15,000, and 
-even $20,000 and $25,000. This makes sense; people are likelier to fixate on values
+even $20,000 and $25,000. This makes sense; people are likely to fixate on values
 that are easy to remember, like those that are factors of 5 and 10, rather than 
 arbitrary values in between.
 
@@ -188,15 +185,15 @@ pld %>%
 
 **Occupation of Borrowers**
 
-Next I want to visualize more data on these borrowers, and there are a variety of
-variables that can paint a clearer picture. Let's first see what they do:
+Next I want to visualize more data on these borrowers, and there are a variety 
+of variables that can paint a clearer picture. Let's first see what they do:
 
 ```{r, fig.width = 10, fig.height = 9}
 ggplot(aes(x = reorder(Occupation, Occupation,function(x) -length(x)),
            fill = I("#0077C0")),data = pld) + xlab("Occupation") +
   geom_bar() +  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-I decided to opt for a vertical plot, since there are 68 different occupations listed.
+I decided to opt for a vertical plot, since there are 68  occupations listed.
 
 The first thing I noticed in this histogram were the two bars a world away from 
 the rest of the occupations - and a quick check told me that it was the count for
@@ -231,14 +228,15 @@ ggplot(aes(x = reorder(BorrowerState, BorrowerState,function(x) length(x)),
   geom_bar() +  xlab("Borrower State") +  coord_flip()
 ```
 
-We see that the states of California, Texas, New York are the top 3 states having
+We see that the states of California,Texas, New York are the top 3 states having
 the most no. of borrowers using Prosper Loans. It is not surprising to see 
 California heading the list, as it was here that the company was first founded.
 
 ```{r, fig.width = 10, US_Map_of_Borrowers}
 
 # Map the 2 letter abbrievations to their full name for map plot
-pld$BorrowerStateFullName <- tolower(state.name[match(pld$BorrowerState, state.abb)])
+pld$BorrowerStateFullName <- tolower(state.name[match(pld$BorrowerState, 
+                                                      state.abb)])
 
 us <- map_data("state")
 states <- data.frame(state.center, state.abb)
@@ -254,9 +252,12 @@ ggplot() +
            color="#ffffff", size=0.15) +
   geom_map(data = na.omit(grp_by_state), map=us,color = "#ffffff", size = 0.15,
             aes(fill = count, map_id = BorrowerStateFullName)) +
-  geom_text(data = states,aes(x = x, y = y, label = state.abb, group = NULL), size = 2) +
-  scale_fill_continuous(low='lightgoldenrod1', high='orangered1', guide='colorbar') +
-  labs(x="Borrowers by State", y=NULL) + coord_map("albers", lat0 = 39, lat1 = 45) +
+  geom_text(data = states,aes(x = x, y = y, label = state.abb, group = NULL),
+            size = 2) +
+  scale_fill_continuous(low='lightgoldenrod1', high='orangered1', 
+                        guide='colorbar') +
+  labs(x="Borrowers by State", y=NULL) + coord_map("albers", lat0 = 39, 
+                                                   lat1 = 45) +
   ggtitle("Geographic Distribution of Prosper Borrowers by State") +
   theme(plot.title = element_text(face = 'bold',colour = 'black', size=11),
         panel.border = element_blank(),panel.background = element_blank(),
@@ -267,7 +268,9 @@ Next let's look at the **income range** of these borrowers
 ```{r, fig.width = 10}
 qplot(x = IncomeRange, data = pld, fill = I("#0077C0")) +
   stat_count(aes(y=..count.., label=..count..), geom="text", vjust=-.5,size=3) +
-  scale_x_discrete(limits = c("Not employed", "$0", "$1-24,999", "$25,000-49,999", "$50,000-74,999", "$75,000-99,999", "$100,000+", "Not displayed"))
+  scale_x_discrete(limits = c("Not employed", "$0", "$1-24,999", 
+                              "$25,000-49,999", "$50,000-74,999", 
+                              "$75,000-99,999", "$100,000+", "Not displayed"))
 ```
  Most borrowers seem to be in the income bracket from 25,000 $ to 75,000 $.
  
@@ -282,9 +285,11 @@ ggplot(aes(x = EstimatedEffectiveYield), data = pld) +
     geom_density(alpha=.2, fill="#FF6666", na.rm = T) + 
     geom_vline(aes(xintercept=mean(EstimatedEffectiveYield, na.rm=T)), 
                color="blue", linetype="dashed", size=1) +
-    ggtitle("Distribution of EstimatedEffectiveYield",subtitle = "Mean in dashed Blue") +
+    ggtitle("Distribution of EstimatedEffectiveYield",
+            subtitle = "Mean in dashed Blue") +
     theme(plot.title = element_text(face = 'bold',colour = 'black', size=10),
-          plot.subtitle = element_text(face = 'italic',colour = 'darkblue', size=08))
+          plot.subtitle = element_text(face = 'italic',colour = 'darkblue',
+                                       size=08))
 ```
 Summary Stats for Estimated Effective Yield
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -295,9 +300,9 @@ the interest rate because the interest includes _processing fees_,
 _uncollected interest due to borrower being chargedoff_. Plus it also doesn't 
 include _late fines_. Hence EstimatedEffectiveYield takes into account all these
 things and it is thus a better measure. In the figure above we are trying to see
-the distribution of the EstimatedEffectiveYield and we can see that it is multimodal.
-We see the  most popular EstimatedEffectiveYield is around 0.3 while the mean is
-around 0.17 represented by the blue dotted line. 
+the distribution of the EstimatedEffectiveYield and we can see that it is 
+multimodal. We see the  most popular EstimatedEffectiveYield is around 0.3 while
+the mean is around 0.17 represented by the blue dotted line. 
   The multimodal pattern shows that there are multiple EstimatedEffectiveYield 
 that is popular. Strangely we can also see that the some customers have negative
 EstimatedEffectiveYield. This may mean a lot of things. This may mean that their
@@ -323,7 +328,7 @@ prosperScoreCountPlot <- pld %>%
     scale_y_continuous(breaks = seq(0, 15000, 2500)) +
     scale_x_continuous(breaks = seq(1, 11, 1))
 
-EmploymentStatusDurationHist <- ggplot(aes(x = EmploymentStatusDuration),data = pld) +
+EmploymentStatusDurationHist<-ggplot(aes(x=EmploymentStatusDuration),data= pld)+
     geom_histogram(binwidth = 10, color = 'white',fill='#05DBF1') +
     scale_x_continuous(breaks = seq(0, 400, 100), limits = c(0, 400)) +
     theme_pander() +
@@ -386,8 +391,8 @@ grid.arrange(prosperScoreCountPlot,
 ## Univariate Analysis
 We have performed various operations like tidying up the data and adjusting the 
 time series to have quarter yearly durations for future plots. We have 
-investigated several features of the dataset which will be key to further analysis 
-in this EDA.
+investigated several features of the dataset which will be key to further 
+analysis in this EDA.
 
 # Bivariate Plots Section
  In this section we investigate relationships between variables, both the
@@ -404,17 +409,18 @@ We are using violin plot instead of box plot for this.
 
 ```{r, fig.width = 10}
 pld$ProsperScore <- factor(pld$ProsperScore)
-ggplot(aes(x = ProsperScore, y = EstimatedEffectiveYield, fill=ProsperScore), 
-       data = subset(pld, !is.na(pld$ProsperScore) & !is.na(pld$EstimatedEffectiveYield))) +
-    geom_violin(trim = F, scale = "width") +
-    stat_summary(fun.y=median, geom="point", size=2, color="black") +
-    scale_fill_manual(values=colorRampPalette(c("lightgreen", "#05DBFF"))(11)) + 
-    theme_minimal() +
-    ylab('Effective Yield of Lenders') +
-    ggtitle("Effective Yield by Prosper Score",subtitle = "Indicator for Lenders preference") +
-    theme(plot.title = element_text(face = 'bold.italic',colour = 'black',size=12),
-          plot.subtitle = element_text(face = 'bold',colour = 'darkgreen',size=09)) +
-    guides(fill = F)
+ggplot(aes(x = ProsperScore, y = EstimatedEffectiveYield, fill=ProsperScore),
+       data = subset(pld,!is.na(pld$ProsperScore)&
+                       !is.na(pld$EstimatedEffectiveYield))) +
+  geom_violin(trim = F, scale = "width") +
+  stat_summary(fun.y=median, geom="point", size=2, color="black") +
+  scale_fill_manual(values=colorRampPalette(c("lightgreen", "#05DBFF"))(11)) +
+  theme_minimal() +  ylab('Effective Yield of Lenders') +
+  ggtitle("Effective Yield by Prosper Score",
+          subtitle = "Indicator for Lenders preference") +
+  theme(plot.title = element_text(face ='bold.italic',colour = 'black',size=12),
+      plot.subtitle = element_text(face = 'bold',colour = 'darkgreen',size=09))+
+  guides(fill = F)
 ```
 
 We see some interesting trends here. Here a higher Prosper score means better 
@@ -441,10 +447,18 @@ rates doesn't include late fines.
 ```{r, fig.height=5, fig.width=10}
 
 borrower_apr <- ggplot(aes(x = ProsperScore,y = BorrowerAPR),
-                       data = subset(pld, !is.na(pld$ProsperScore) & !is.na(pld$BorrowerAPR))) + geom_boxplot(aes(group = cut_width(ProsperScore, 1)),outlier.color = I("#FBB660"),outlier.shape = 1,outlier.alpha = 0.5) + theme_pander()
+                       data = subset(pld, !is.na(pld$ProsperScore) &
+                                       !is.na(pld$BorrowerAPR))) + 
+  geom_boxplot(aes(group = cut_width(ProsperScore, 1)),
+               outlier.color = I("#FBB660"),outlier.shape = 1,
+               outlier.alpha = 0.5) + theme_pander()
 
 borrower_rate <- ggplot(aes(x = ProsperScore,y = BorrowerRate),
-                        data = subset(pld,!is.na(pld$ProsperScore) & !is.na(pld$BorrowerRate))) + geom_boxplot(aes(group = cut_width(ProsperScore, 1)),outlier.color = I("#FBB520"), outlier.shape = 1,outlier.alpha = 0.5) +  theme_pander()
+                        data = subset(pld,!is.na(pld$ProsperScore) &
+                                        !is.na(pld$BorrowerRate))) +
+  geom_boxplot(aes(group = cut_width(ProsperScore, 1)),
+               outlier.color = I("#FBB520"), 
+               outlier.shape = 1,outlier.alpha = 0.5) +  theme_pander()
 
 grid.arrange(borrower_apr, borrower_rate,nrow = 1, ncol = 2,
              top = "Interest Rate Distributions")
@@ -486,70 +500,19 @@ by(pld$BorrowerRate, pld$ListingCategory, summary)
 ```
 
 In the above two plots, I examine the loan category, loan amounts and borrowing 
-rate. Debt consolidation as expected has the highest loan amounts across 
-categories; however, unexpectedly "Baby and Adoption" category is also the highest
+rate. _Debt consolidation_ as expected has the highest loan amounts across 
+categories; however, unexpectedly _Baby and Adoption_ category is also the highest
 (tied) loan amount across categories. It would be interesting to investigate the
 total number of borrowers across these two categories, one would expect debt 
 consolidation to have a large distribution of borrowers.
 
-Also of note, the "Student Use" category loan amount it quite low. Given the well
+Also of note,the _Student Use_ category loan amount it quite low. Given the well
 documented high levels of student debt, we can assume students didn't suddenly 
-stop having debt but instead don't use Prosper to manage their debt or this 
-category covers items other than student tutition such as lunches, dinners and books.
+stop having debt but instead didn't use Prosper to manage their debt or this 
+category covers items other than student tuition such as lunches,dinners or books.
 
 The borrower's interest rate doesn't seem to have any particular surprises. The 
 mean borrowing rate across all categories tend to vary between 0.15 and 0.25. 
-
-
-**Distribution of Loans over the Years**
-
-```{r, fig.width = 10}
-# Investigate distribution of loan creation year
-ggplot(pld, aes(pld$LoanCreationYear,fill = factor(LoanStatusGroup))) + 
-  geom_bar() + xlab("Year") + ylab("Loans Created") +
-  theme(legend.position="top") +
-  scale_fill_manual(name = "Loan Status",values = c("#FA4659","#FBB448","#2EB872"))
-```
-In this plot we see basically see the growth story of _Prosper_ over the years
-since its inception. This seems to be a very interesting plot that is worthy of
-further investigation.
-
-**Debt-to-Income Ratio and Monthly Income**
-
-```{r, echo = FALSE}
-loans.status <- pld %>%
-  filter(LoanStatusGroup %in% c("Completed", "Delinquent")) %>%
-  select(StatedMonthlyIncome,DebtToIncomeRatio,LoanStatusGroup)
-```
-
-```{r, fig.width = 10}
-# monthly income vs debt to income ratio, highlighting delinquent borrowers
-ggplot(loans.status, aes(StatedMonthlyIncome,DebtToIncomeRatio, 
-                         colour = factor(LoanStatusGroup))) +
-  geom_point(alpha = 0.25) +  theme_minimal() +
-  scale_x_continuous(limits = c(0,20000)) +
-  scale_y_continuous(limits = c(0, 1)) +
-  theme(legend.title=element_blank()) +
-  scale_colour_manual(values=c("#FA4659","#2EB872")) +
-  geom_density2d()
-```
-
-In comparing debt-to-income ratio with a borrower's stated monthly income one 
-might expect to see a somewhat obvious, trend that delinquent borrowers would have
-a lower monthly income and a higher debt-to-income ratio. With overplotting in the
-scatterplot two additional techniques were used to more clearly reveal any trends
-or unexpected results. Borrowers with stated incomes over $20k and debt-to-income
-ratios over 1 were considered as outliers and removed from the plot. 
-
-The density contour lines show a high concentration of delinquent borrowers earn
-less than $2500 a month but have a low debt-to-income ratio of under 0.50 (or 50%).
-The plot also suggests a negative correlation between monthly income and 
-debt-to-income ratio,i.e the more a borrower makes in monthly income the lower 
-their debt-to-income ratio; However, this does not guarantee the loan will not 
-go into delinquency.
-
-After further review from [online resources](https://smartasset.com/credit-cards/what-is-a-good-debt-to-income-ratio),
-it seems that a typical "good" debt-to-income ratio is under approx. 36%.
 
 ## Bivariate Analysis
 To identify significant relationships between the different variables in the
@@ -559,9 +522,9 @@ dataset lets go for a correlation matrix.
 
 ```{r echo=TRUE}
 colsToKeep <- c("Term","EstimatedLoss","EstimatedEffectiveYield","LenderYield",
-               "CreditScoreRangeLower","CreditScoreRangeUpper","MonthlyLoanPayment",
-               "LoanOriginalAmount","TotalProsperLoans","Investors","BorrowerAPR",
-               "BorrowerRate","DebtToIncomeRatio","StatedMonthlyIncome"  )
+           "CreditScoreRangeLower","CreditScoreRangeUpper","MonthlyLoanPayment",
+           "LoanOriginalAmount","TotalProsperLoans","Investors","BorrowerAPR",
+           "BorrowerRate","DebtToIncomeRatio","StatedMonthlyIncome")
 
 # Keep only variables in colsToKeep (columns to keep)
 prosperloans <- subset(pld, select=colsToKeep)
@@ -579,19 +542,72 @@ ggcorr(prosperloans, label = TRUE, label_size = 3, hjust = 0.8, size = 2.5,
        color = "black", layout.exp = 2)
 ```
 There are lots of correlated variables  in the data set. The most correlated 
-variables (corr = 0.911) are _Loan origination amount_ and _monthly loan payment_, 
-which is not surprising.
+variables (corr = 0.911) are _Loan origination amount_ and 
+_monthly loan payment_, which is not surprising.
 
 Borrower rate is negatively correlated with Prosper score and credit score.
 Debt income ratio is slighlty correlated with credit score.
 
-Prosper score is also correlated with loan origination amount and monthly payment.
+Prosper score is also correlated with loan origination amount & monthly payment.
 
 # Multivariate Plots Section
 
 In this section, we will further examine the relationships between multiple 
-variables of the dataset. We will continue with the strong relationships identified
-from the correlation matrix in the Bivariate Plots section.
+variables of the dataset. We will continue with the strong relationships 
+identified from the correlation matrix in the Bivariate Plots section and also
+look at some other variables that may be of interest.
+
+**Distribution of Loans over the Years**
+
+```{r, fig.width = 10}
+# Investigate distribution of loan creation year
+ggplot(pld, aes(pld$LoanCreationYear,fill = factor(LoanStatusGroup))) + 
+  geom_bar() + xlab("Year") + ylab("Loans Created") +
+  theme(legend.position="top") +
+  scale_fill_manual(name="Loan Status",values =c("#FA4659","#FBB448","#2EB872"))
+```
+In this plot we see basically see the growth story of _Prosper_ over the years
+since its inception. This seems to be a very interesting plot that is worthy of
+further investigation.
+
+**Debt-to-Income Ratio and Monthly Income**
+
+```{r, echo = FALSE}
+loans.status <- pld %>%
+  filter(LoanStatusGroup %in% c("Completed", "Delinquent")) %>%
+  select(StatedMonthlyIncome,DebtToIncomeRatio,LoanStatusGroup)
+```
+
+```{r, fig.width = 10}
+# monthly income vs debt to income ratio, highlighting delinquent borrowers
+ggplot(loans.status, aes(StatedMonthlyIncome,DebtToIncomeRatio, 
+                         colour = factor(LoanStatusGroup))) +
+  geom_point(alpha = 1/10) +  theme_minimal() +
+  facet_grid(~ LoanStatusGroup) +
+  scale_x_continuous(limits = c(0,20000)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  theme(legend.title=element_blank()) +
+  scale_colour_manual(values=c("#FA4659","#2EB872")) +
+  geom_density2d(lineend = "butt")
+```
+
+In comparing debt-to-income ratio with a borrower's stated monthly income one 
+might expect to see a somewhat obvious, trend that delinquent borrowers would 
+have a lower monthly income and a higher debt-to-income ratio. With overplotting
+in the scatterplot two additional techniques ( _facet grid_ and _geomdensity2d_)
+were used to more clearly reveal any trends or unexpected results.Borrowers with
+stated incomes over $20k and debt-to-income ratios over 1 were considered as 
+outliers and removed from the plot. 
+
+The density contour lines show a high concentration of delinquent borrowers earn
+less than $3500 a month but have a low debt-to-income ratio of under 0.50.
+The plot also suggests a negative correlation between monthly income and 
+debt-to-income ratio,i.e the more a borrower makes in monthly income the lower 
+their debt-to-income ratio; However, this does not guarantee the loan will not 
+go into delinquency.
+
+After further review from [online resources](https://smartasset.com/credit-cards/what-is-a-good-debt-to-income-ratio),
+it seems that a typical "good" debt-to-income ratio is under approx. 36%.
 
 **Estimated Effective Yield by Estimated Loss**
 ```{r fig.width=10, echo=FALSE}
@@ -605,11 +621,11 @@ grid.arrange(eyel_term,eyel_ps,nrow = 1, ncol = 2,
              top = "EstimatedEffectiveYield Vs. EstimatedLoss")
 ```
 The correlation matrix showed a high positive correlation (0.9) between 
-_Estimated Effective Yield_ and _Estimated Loss_. Investigating this relationship
-further constrained on Term of the Loan and ProsperScore reveals some interesting insights.
-  The short term 1 year loan, seems to be having a higher exponentially increasing
-Estimated loss in comparison to the other term loans. The widely popular 3 year 
-loan shows Estimated Losses all over the place.
+_Estimated Effective Yield_ and _Estimated Loss_.Investigating this relationship
+further constrained on LoanTerm and ProsperScore reveals some interesting
+insights.The short term 1 year loan, seems to be having a exponentially 
+increasing Estimated loss in comparison to the other term loans. 
+The widely popular 3 year loan shows Estimated Losses all over the place.
 
 The plot on the right factored by Prosper Score indicates a logical and 
 expected outcome, lower Prosper scores (close to 1) indicating high risks show
@@ -643,13 +659,18 @@ We observe the variance explained by risk, represented by the ProsperScore.
 The bottom of the scatter plot is dominated by loans with a ProsoperScore equal
 to 11, which represents loans with low risks. The top of the scatter plot is 
 dominated by loans with a ProsoperScore equal to 4, which represents loans with
-higher risks. Loans with a loan amount higher than $25000 are mostly dominated by
-a ProsperScore equal or superior to 1.
+higher risks. Loans with a loan amount higher than $25000 are mostly dominated 
+by a ProsperScore equal or superior to 1.
 
 
 ## Multivariate Analysis
 
-We have observed that the Prosper score has an influence on montly payments for 
+We looked at Prosper's growth story over the years since it's inception in 2005,
+investigated the relationship between Debt to Income Ratio Vs. Monthly income 
+based on Loan Status which did not reveal anything conclusive because of 
+overplotting. 
+
+  We have observed that the Prosper score has an influence on montly payments for 
 the same loan origination amount and same term. This Score should be a way to 
 quantify the probability that the loan is going to default or not. The Prosper
 Score also revealed the quantum of Estimated Loss that is likely to be incurred 
@@ -665,13 +686,13 @@ fit1 <- lm(MonthlyLoanPayment ~ LoanOriginalAmount, data = pld)
 summary(fit1)
 ```
 _LoanOriginalAmount_ should be the most important factor to decide what would be 
-the MonthlyLoanPayment. As we can see that the correlation has very good Adjusted
-R-squared value of 0.845 or almost 85%. The Residual Standard Error is however 
+the MonthlyLoanPayment.As we can see that the correlation has very good Adjusted
+R-squared value of 0.868 or almost 86%. The Residual Standard Error is however 
 quite high almost 70 which indicates the average performance of the linear model.
 
 # Final Plots and Summary
- In this section we select and refine three plots from all the above explorations
- and present here a summary of some of the most interesting findings.
+In this section we select and refine three plots from all the above explorations
+and present here a summary of some of the most interesting findings.
 
 ### Plot One
 ```{r, echo = FALSE}
@@ -681,14 +702,6 @@ loans.defaults <- pld %>%
   arrange(Quarter, LoanStatusGroup)
 ```
 
-```{r eval=FALSE, fig.width=10, message=FALSE, warning=FALSE, include=FALSE}
-# ggplot(aes(x = Quarter, y = Loans, fill = LoanStatusGroup),data = loans.defaults) +
-#   geom_bar(stat = "identity")  + ylab("Loans Created") +
-#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),legend.position="top") +
-#   scale_fill_manual(name = "Loan Status",values = c("#FA4659","#FBB448","#2EB872")) +
-#   ggtitle("Status and Growth of Prosper Loans") +
-#   theme(plot.title = element_text(face = 'bold',colour = 'black',size=11))
-```
 It is very worthwhile to investigate the creation date distribution of loans 
 in the dataset. This is important as this could cause bias in further
 investigation, for example, if the majority of the data was observed during 
@@ -706,8 +719,10 @@ plot_ly(data = loans.defaults, x = ~Quarter, y = ~Loans,type = 'bar',
 ```
 
 #### Description One
-  In the above plot we further investigate the plot we made in the Bivariate section.
-We have expanded the X-axis to include Yearly quarters instead of just showing the year.
+  In the above plot we further investigate the plot we made in the Bivariate 
+section. We have expanded the X-axis to include Yearly quarters instead of just
+showing the year.
+
 Here we see some dampening in the business of _Prosper Funding LLC_ which can be
 attributed to the [financial crisis](https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%932008) 
 of 2008. There was a lot of delinquent (_bad performing_) loans. Post 2009, the 
@@ -728,8 +743,8 @@ plot_ly(data = df, x = ~LoanOriginalAmount, y = ~MonthlyLoanPayment,
 
 #### Description Two
  Here we select the plot of **Loan Origination Amount Vs. Monthly Loan Payment**
-from the Multivariate Plots section but restrict the data for 3 year Term loans,
-as it is the most popular term for borrowers.
+from the Multivariate Plots section but we restrict the data for 3 year Term 
+loans, as it is the most popular term for borrowers.
 
 ### Plot Three
 
@@ -746,12 +761,12 @@ borrower_apr <- ggplot(aes(x = ProsperScore,y = BorrowerAPR,color=ProsperScore,
     xlab('\n Prosper Score') +
     ylab('Annual Percentage Rate') +
     ggtitle("Borrower Annual Rate", subtitle = "for each borrower group") +
-    theme(plot.title = element_text(face = 'bold',colour = 'dodgerblue2',size=12),
+    theme(plot.title = element_text(face ='bold',colour='dodgerblue2',size=12),
           plot.subtitle = element_text(colour = 'black',size=10))
 
-borrower_rate <- ggplot(aes(x = ProsperScore,y = BorrowerRate,color=ProsperScore,
+borrower_rate <- ggplot(aes(x=ProsperScore,y=BorrowerRate,color=ProsperScore,
                             fill = I("#F5F5F4"), color = I("#506E85")), 
-       data = subset(pld, !is.na(pld$ProsperScore) & !is.na(pld$BorrowerRate))) +
+       data = subset(pld,!is.na(pld$ProsperScore) & !is.na(pld$BorrowerRate)))+
     geom_jitter(shape=2, position=position_jitter(0.2), col = "indianred2",
                 alpha = 1/12) +
     geom_boxplot(aes(group = cut_width(ProsperScore, 1)),
@@ -761,7 +776,7 @@ borrower_rate <- ggplot(aes(x = ProsperScore,y = BorrowerRate,color=ProsperScore
     xlab('\n Prosper Score') +
     ylab('Borrower Interest Rate') +
     ggtitle("Borrower Interest Rate", subtitle = "for each borrower group") +
-    theme(plot.title = element_text(face = 'bold',colour = 'indianred2',size=12),
+    theme(plot.title = element_text(face = 'bold',colour= 'indianred2',size=12),
           plot.subtitle = element_text(colour = 'black',size=10))
 
 grid.arrange(borrower_apr,borrower_rate, nrow = 2, ncol = 1)
@@ -798,18 +813,19 @@ The prospser loans dataset contains over 100k observations with 81 variables
 spanning across 9 years. Understanding the variables, terminology and general 
 domain knowledge of financial peer-to-peer lending was the first obstacle in 
 approaching this dataset.But the overall experience has been quite rewarding in
-this EDA. I had learned many tools and concepts in Data Analytics with R in this process.
+this EDA. I had learned many tools and concepts in Data Analytics with R in this
+process.
 
 We have been able to analyze that Prosper's portfolio has really changed between
-2009 and 2014. It seems that Prosper doesn't only use credit scores to assess risk
+2009 and 2014.It seems that Prosper doesn't only use credit scores to assess risk
 but also several other variables that could be in the dataset, in addition to 
 external data not included in the dataset available.
 
 Instead of just using the Prosper score to decide whether or not to invest, it 
 would be interesting to build a predictive model that quantifies if the person is
-going to default on their loan. We could use, for example, a logistic regression.
-However there are lots of variables that are correlated, such as loan origination
-amount, credit score, and Prosper score. It's important to carefully choose which
+going to default on their loan. We could use for example, a logistic regression.
+However there are lots of variables that are correlated,such as loan origination
+amount, credit score, and Prosper score.It's important to carefully choose which
 variables should be included in the model.
 
 Additional data would also enhance this dataset. Having the borrower's age and 
