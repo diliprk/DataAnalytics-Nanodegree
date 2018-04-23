@@ -1,4 +1,6 @@
 # Project 7 - Wrangle and Analyze Data - WeRateDogs
+[CLICK HERE](https://nbviewer.jupyter.org/github/thunderkatzen/DataAnalytics-Nanodegree/blob/master/Project%207%20-%20Wrangle%20and%20Analyze%20Data/wrangle_act.ipynb) to view the `wrangle_act.ipynb` jupyter notebook in nbviewer to see all the Bokeh Visualizations properly rendered.
+
 
 ## Overview
 This project was part of the data wrangling section of the Udacity Data Analyst Nanodegree program and is primarily focused on wrangling data from the [**WeRateDogs**](https://twitter.com/dog_rates) Twitter account using Python, documented in a Jupyter Notebook.
@@ -24,7 +26,7 @@ Udacity also provided a link to `image_predictions.tsv` which was to be download
 The provided Twitter archive lacked some useful information such as *retweet count* and *favorite count*. The tweet IDs from the twitter archive was used to query the Twitter API for each tweet's JSON data using Python's `Tweepy` library. The resulting JSON data of each tweet was stored in a file called ```tweet_json.txt```. I then read the txt file line by line into a pandas DataFrame only including the desired variables: retweet count and favorite count.
 
 ### The Files
-* **`wrangle_act.ipynb`** : Jupyter notebook containing all the code for this project.
+* **wrangle_act.ipynb** : Jupyter notebook containing all the code for this project.
 * **wrangle_report.pdf**: Briefly discuss the wrangling process and future work.
 * **act_report.pdf** : Briefly discuss the insights drawn from improved data set.
 
