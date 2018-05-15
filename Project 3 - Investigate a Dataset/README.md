@@ -5,3 +5,7 @@ In this project, we made use of Python data analytics toolsets to investigate a 
 - Pandas
 - Matplotlib
 
+**Reviewer's Feedback**:
+> Dear student,
+I reviewed your previous submission, well done successfully addressing every pending issue and completing your very good work. Aside from reposting some (old and new ) pro tips there's not much I can further add to enhance your project.
+Congratulations on passing your exam and good luck with the rest of the Nanodegree!

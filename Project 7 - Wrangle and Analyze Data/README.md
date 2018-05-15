@@ -1,6 +1,10 @@
 # Project 7 - Wrangle and Analyze Data - WeRateDogs
 [CLICK HERE](https://nbviewer.jupyter.org/github/thunderkatzen/DataAnalytics-Nanodegree/blob/master/Project%207%20-%20Wrangle%20and%20Analyze%20Data/wrangle_act.ipynb) to view the `wrangle_act.ipynb` jupyter notebook in nbviewer to see all the Bokeh Visualizations properly rendered.
 
+__Reviewer's Feedback:__
+> Hi Dilip,
+Your technical, visualisation, and even narrative skills are superb. This project is outstanding, and I will be nominating it for exceptional effort when I submit my review. I couldn't congratulate you more on the exceptional skill and effort you have put into this one- even the reports were drawn up with exquisite quality. It was a pleasure going through your work, thank you!
+***
 
 ## Overview
 This project was part of the data wrangling section of the Udacity Data Analyst Nanodegree program and is primarily focused on wrangling data from the [**WeRateDogs**](https://twitter.com/dog_rates) Twitter account using Python, documented in a Jupyter Notebook.

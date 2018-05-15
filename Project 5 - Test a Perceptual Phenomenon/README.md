@@ -9,3 +9,6 @@ You can download the datasets used in this project [here](https://drive.google.c
 - Statsmodels.api
 - t-Test 
 
+
+**Reviewer's Feedback:**
+> Congratulations on completing the course (referring to the project chapter). Next we will be getting deeper into the Python Programming language and doing another sort of statistical test. Remember the level of clarity you have given in this project for that one. The reviews will be held to a similar level of scrutiny. But there is an exciting addition to the statistical analysis. We will be getting into our first Machine Learning and Prediction algorithm! These techniques are at the core of self-driving cars and facial recognition. It is really cool and I hope you like it too. Good luck!
