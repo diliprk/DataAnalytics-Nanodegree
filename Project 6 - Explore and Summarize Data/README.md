@@ -6,7 +6,7 @@ In this project, we use `*R*` and apply Exploratory Data Analysis techniques on 
 - ggplot
 - plotly
 ___
-**Reviewer's Feedback**:
+**Reviewer's Feedback**:<br>
 _Review 1_
 > I would like to propose to next reviewer to nominate this project for excellence if no other further concern is involved, nice job done Dilip!
 
